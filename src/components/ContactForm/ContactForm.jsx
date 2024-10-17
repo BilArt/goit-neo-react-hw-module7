@@ -1,20 +1,10 @@
 import { useId } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact, selectContacts } from '../../redux/contactsSlice';
+import { addContact } from '../../redux/contactsOps';
+import { selectContacts } from '../../redux/contactsSlice';
 import styles from "./ContactForm.module.css";
 
-const ContactSchema = Yup.object().shape({
-  name: Yup.string()
-    .min(3, "Name must be at least 3 characters")
-    .max(50, "Name must be less than 50 characters")
-    .required("Name is required"),
-  number: Yup.string()
-    .min(3, "Number must be at least 3 characters")
-    .max(50, "Number must be less than 50 characters")
-    .required("Number is required"),
-});
 
 const ContactForm = () => {
   const dispatch = useDispatch();
@@ -28,14 +18,13 @@ const ContactForm = () => {
       alert("Contact already exists!");
       return;
     }
-    dispatch(addContact(values.name, values.number));
+    dispatch(addContact({ name: values.name, number: values.number }));
     resetForm();
   };
 
   return (
     <Formik
       initialValues={{ name: "", number: "" }}
-      validationSchema={ContactSchema}
       onSubmit={handleSubmit}
     >
       {() => (
